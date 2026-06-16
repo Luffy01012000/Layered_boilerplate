@@ -1,5 +1,5 @@
 {
-    "extends": "@tsconfig/node24/tsconfig.json",
+  "extends": "@tsconfig/node24/tsconfig.json",
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
@@ -8,8 +8,7 @@
 
     // Environment Settings
     "module": "ESNext",
-    "moduleResolution":"bundler",
-   
+    "moduleResolution": "bundler",
 
     // Other Outputs
     "sourceMap": true,
@@ -29,14 +28,14 @@
     // "noPropertyAccessFromIndexSignature": true,
 
     // Recommended Options
-     "forceConsistentCasingInFileNames": true,
-      "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     // "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
+    "moduleDetection": "force"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules","dist","build"]
+  "exclude": ["node_modules", "dist", "build"]
 }
