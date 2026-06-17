@@ -6,7 +6,7 @@ import logger from '#shared/config/logger.js'
 import { APPLICATION_ROLES } from '#shared/constants/roles.js'
 import { IUserRepository } from '../interfaces/userRepository.js'
 import { RegisterDto } from '../dto/register.dto.js'
-import type { User } from '#prismagenerated/prisma/client.js'
+import type { User } from '@prisma/client'
 
 /**
  * AuthService handles user authentication and authorization related operations such as onboarding super admin, user registration, login, and fetching user profile.

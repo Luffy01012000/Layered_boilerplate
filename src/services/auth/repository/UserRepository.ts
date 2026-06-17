@@ -1,4 +1,4 @@
-import type { Prisma, User } from '#prismagenerated/prisma/client.js'
+import type { Prisma, User } from '@prisma/client'
 
 import BaseRepository from './BaseRepository.js'
 import logger from '#shared/config/logger.js'

@@ -1,4 +1,4 @@
-import type { User } from '#prismagenerated/prisma/client.js'
+import type { User } from '@prisma/client'
 import { RegisterDto } from '../dto/register.dto.js'
 
 type SafeUser = Omit<User, 'passwordHash'>

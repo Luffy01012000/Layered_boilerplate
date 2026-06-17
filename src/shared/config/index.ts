@@ -39,6 +39,14 @@ const config = {
     secret: required('JWT_SECRET'),
     expiresIn:
       (process.env.JWT_EXPIRES_IN! as StringValue) ?? ('24h' as StringValue)
+  },
+
+  mail: {
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT ?? 587),
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+    from: process.env.SMTP_FROM ?? 'noreply@example.com'
   }
 } as const
 

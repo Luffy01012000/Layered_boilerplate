@@ -30,9 +30,10 @@
 
     "paths": {
       "#shared/*": ["./src/shared/*"],
-      "#prismagenerated/*": ["./src/shared/generated/*"]
+      "#prismagenerated/*": ["./src/shared/generated/*"],
+      "#authService/*": ["./src/services/auth/*"]  
     },
-
+    "types": ["node", "vitest/globals"],
     // Recommended Options
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,

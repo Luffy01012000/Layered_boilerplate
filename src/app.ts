@@ -1,8 +1,12 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 import authRouter from './services/auth/routes/authRouter.js'
+import fileRouter from './services/file/routes/fileRouter.js'
+import mailRouter from './services/mail/routes/mailRouter.js'
+import paymentRouter from './services/payment/routes/paymentRouter.js'
 import { errorHandler } from './shared/middlewares/errorHandler.js'
 
 export const createServer = () => {
@@ -12,6 +16,7 @@ export const createServer = () => {
     .use(morgan('dev'))
     .use(express.urlencoded({ extended: true }))
     .use(express.json())
+    .use(cookieParser())
     .use(cors())
 
   app.get('/healthz', (req, res) => {
@@ -23,6 +28,9 @@ export const createServer = () => {
   })
 
   app.use('/api/auth', authRouter)
+  app.use('/api/files', fileRouter)
+  app.use('/api/mail', mailRouter)
+  app.use('/api/payments', paymentRouter)
 
   app.use(errorHandler)
 

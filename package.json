@@ -4,9 +4,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "vitest run",
+    "test": "cross-env NODE_ENV=test vitest run",
+    "test:unit": "cross-env NODE_ENV=test vitest run ",
+    "test:integration": "cross-env NODE_ENV=test vitest run ",
+    "test:e2e": "cross-env NODE_ENV=test vitest run \"src/tests/**/*.e2e.test.ts\" --passWithNoTests",
     "start": "bun run build && node dist/server.js",
-    "build": "cross-env NODE_ENV=production tsc",
+    "build": "cross-env NODE_ENV=production tsc && tsc-alias",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "dev": "cross-env NODE_ENV=development  tsx watch src/server.ts",
@@ -15,7 +18,9 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "prepare": "husky",
-    "prisma:generate": "bun x prisma generate"
+    "prisma:generate": "bun x prisma generate",
+    "prisma:reset": "bun x prisma migrate reset",
+    "prisma:status": "bunx --bun prisma migrate status"
   },
   "keywords": [],
   "author": "",
@@ -31,9 +36,12 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.1.0",
     "@types/node": "^25.9.3",
+    "@types/nodemailer": "^8.0.1",
     "@types/pg": "^8.20.0",
     "@types/source-map-support": "^0.5.10",
+    "@types/supertest": "^7.2.0",
     "eslint": "^10.5.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
@@ -41,6 +49,8 @@
     "lint-staged": "^17.0.7",
     "prettier": "^3.8.4",
     "prisma": "^7.8.0",
+    "supertest": "^7.2.2",
+    "tsc-alias": "^1.8.17",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.1",
@@ -59,6 +69,8 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.11.0",
+    "multer": "^2.2.0",
+    "nodemailer": "^9.0.0",
     "pg": "^8.21.0",
     "source-map-support": "^0.5.21",
     "winston": "^3.19.0",
@@ -72,6 +84,7 @@
   },
   "imports": {
     "#prismagenerated/*": "./src/shared/generated/*",
-    "#shared/*": "./src/shared/*"
+    "#shared/*": "./src/shared/*",
+    "#authService/*": "./src/services/auth/*"
   }
 }
