@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "test": "cross-env NODE_ENV=test vitest run",
-    "test:unit": "cross-env NODE_ENV=test vitest run ",
-    "test:integration": "cross-env NODE_ENV=test vitest run ",
-    "test:e2e": "cross-env NODE_ENV=test vitest run \"src/tests/**/*.e2e.test.ts\" --passWithNoTests",
+    "test:unit": "cross-env NODE_ENV=test vitest run unit",
+    "test:integration": "cross-env NODE_ENV=test vitest run integration",
+    "test:e2e": "cross-env NODE_ENV=test vitest run e2e",
     "start": "bun run build && node dist/server.js",
     "build": "cross-env NODE_ENV=production tsc && tsc-alias",
     "typecheck": "tsc --noEmit",
