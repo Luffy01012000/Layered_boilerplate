@@ -1,9 +1,11 @@
 import { defineConfig } from 'eslint/config'
 import tseslint from 'typescript-eslint'
 import prettierPlugin from 'eslint-plugin-prettier'
-import importPlugin from 'eslint-plugin-import'
 
 export default defineConfig([
+  {
+    ignores: ['dist/**', 'node_modules/**', 'src/shared/generated/**']
+  },
   {
     files: ['src/**/*.ts'],
     languageOptions: {
@@ -13,32 +15,18 @@ export default defineConfig([
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      'prettier': prettierPlugin,
-      'import': importPlugin
+      'prettier': prettierPlugin
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      'prettier/prettier': ['warn', { endOfLine: 'auto' }],
+      'prettier/prettier': ['warn', { endOfLine: 'lf' }],
       '@typescript-eslint/no-unused-vars': [
         'warn',
-        { argsIgnorePattern: '^_' }
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
-      'import/order': [
-        'warn',
-        {
-          'groups': [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index'
-          ],
-          'newlines-between': 'always'
-        }
-      ],
-      'comma-dangle': ['warn', 'always-multiline'],
+      // 'comma-dangle': ['warn', 'always-multiline'],
+      'comma-dangle': 'off',
       'no-console': ['warn', { allow: ['warn', 'error'] }]
     }
   }

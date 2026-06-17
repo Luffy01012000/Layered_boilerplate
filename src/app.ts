@@ -2,6 +2,9 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 
+import authRouter from './services/auth/routes/authRouter.js'
+import { errorHandler } from './shared/middlewares/errorHandler.js'
+
 export const createServer = () => {
   const app = express()
   app
@@ -18,6 +21,10 @@ export const createServer = () => {
   app.get('/message/:name', (req, res) => {
     return res.json({ message: `hello ${req.params.name}` })
   })
+
+  app.use('/api/auth', authRouter)
+
+  app.use(errorHandler)
 
   return app
 }

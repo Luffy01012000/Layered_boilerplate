@@ -1,0 +1,45 @@
+import dotenvFlow from 'dotenv-flow'
+import type { StringValue } from 'ms'
+dotenvFlow.config()
+
+function required(name: string): string {
+  const value = process.env[name]
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`)
+  }
+
+  return value
+}
+
+export enum Environment {
+  DEVELOPMENT = 'development',
+  PRODUCTION = 'production',
+  TEST = 'test'
+}
+
+const config = {
+  node_env: (process.env.NODE_ENV as Environment) ?? Environment.DEVELOPMENT,
+
+  port: Number(process.env.PORT ?? 5000),
+
+  postgres: {
+    database_url: required('DATABASE_URL')
+  },
+
+  //   rabbitmq: {
+  //     url: required('RABBITMQ_URL'),
+  //     queue: process.env.RABBITMQ_QUEUE ?? 'api_hits',
+  //     publisherConfirms: process.env.RABBITMQ_PUBLISHER_CONFIRMS === 'true',
+  //     retryAttempts: Number(process.env.RABBITMQ_RETRY_ATTEMPTS ?? 3),
+  //     retryDelay: Number(process.env.RABBITMQ_RETRY_DELAY ?? 1000)
+  //   },
+
+  jwt: {
+    secret: required('JWT_SECRET'),
+    expiresIn:
+      (process.env.JWT_EXPIRES_IN! as StringValue) ?? ('24h' as StringValue)
+  }
+} as const
+
+export default config

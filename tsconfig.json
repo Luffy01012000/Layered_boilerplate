@@ -5,6 +5,7 @@
     // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
+    "allowJs": true,
 
     // Environment Settings
     "module": "ESNext",
@@ -37,5 +38,12 @@
     "moduleDetection": "force"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "build"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "src/shared/generated",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }
