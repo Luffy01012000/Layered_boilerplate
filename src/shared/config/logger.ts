@@ -7,11 +7,9 @@ import {
 } from 'winston/lib/winston/transports'
 import config, { Environment } from '../config/index.js'
 import { red, blue, yellow, green, magenta } from 'colorette'
-import * as sourceMapSupport from 'source-map-support'
 import { fileURLToPath } from 'node:url'
 
 // Linking Trace Support
-sourceMapSupport.install()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
