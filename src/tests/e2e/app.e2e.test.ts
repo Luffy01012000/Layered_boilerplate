@@ -7,7 +7,7 @@ describe('app', () => {
       'postgresql://postgres:postgres@localhost:5432/postgres?schema=public'
     process.env.JWT_SECRET ??= 'test-secret'
 
-    const { createServer } = await import('../../app.ts')
+    const { createServer } = await import('../../app.js')
     const response = await request(createServer()).get('/healthz').expect(200)
 
     expect(response.body).toMatchObject({ ok: true })

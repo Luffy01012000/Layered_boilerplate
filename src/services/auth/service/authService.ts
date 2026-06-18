@@ -148,29 +148,29 @@ export class AuthService {
     try {
       const user = await this.userRepository.findByUsername(name)
 
-      if (!user) {
-        throw new AppError('Invalid credentials', 401)
-      }
+      // if (!user) {
+      throw new AppError('Invalid credentials', 401)
+      // }
 
       // if (!user.isActive) {
       //   throw new AppError('Account is deactivated', 403)
       // }
 
-      const isPasswordValid = await this.comparePassword(
-        password,
-        user.passwordHash
-      )
-      if (!isPasswordValid) {
-        throw new AppError('Invalid credentials', 401)
-      }
-      const token = this.generateToken(user)
+      // const isPasswordValid = await this.comparePassword(
+      //   password,
+      //   user.passwordHash
+      // )
+      // if (!isPasswordValid) {
+      //   throw new AppError('Invalid credentials', 401)
+      // }
+      // const token = this.generateToken(user)
 
-      logger.info('User logged in successfully', { username: user.name })
+      // logger.info('User logged in successfully', { username: user.name })
 
-      return {
-        user: this.formatUserForResponse(user),
-        token
-      }
+      // return {
+      //   user: this.formatUserForResponse(user),
+      //   token
+      // }
     } catch (error) {
       logger.error('Error in Login service', error)
       throw error

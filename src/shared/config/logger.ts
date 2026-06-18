@@ -7,14 +7,12 @@ import {
 } from 'winston/lib/winston/transports'
 import config, { Environment } from '../config/index.js'
 import { red, blue, yellow, green, magenta } from 'colorette'
-import * as sourceMapSupport from 'source-map-support'
 import { fileURLToPath } from 'node:url'
-
-// Linking Trace Support
-sourceMapSupport.install()
+import { serializeUnknownError } from '../utils/errorDetails.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const splatSymbol = Symbol.for('splat')
 
 const colorizeLevel = (level: string) => {
   switch (level) {
@@ -30,7 +28,8 @@ const colorizeLevel = (level: string) => {
 }
 
 const consoleLogFormat = format.printf((info) => {
-  const { level, message, timestamp, meta = {} } = info
+  const { level, message, timestamp } = info
+  const meta = normalizeLogMeta(info)
 
   const customLevel = colorizeLevel(level.toUpperCase())
   const customTimestamp = green(timestamp as string)
@@ -62,21 +61,14 @@ const consoleTransport = (): Array<ConsoleTransportInstance> => {
 }
 
 const fileLogFormat = format.printf((info) => {
-  const { level, message, timestamp, meta = {} } = info
+  const { level, message, timestamp } = info
+  const meta = normalizeLogMeta(info)
 
   const logMeta: Record<string, unknown> = {}
-  const metaObject = (meta ?? {}) as Record<string, unknown>
+  const metaObject = meta
 
   for (const [key, value] of Object.entries(metaObject)) {
-    if (value instanceof Error) {
-      logMeta[key] = {
-        name: value.name,
-        message: value.message,
-        trace: value.stack || ''
-      }
-    } else {
-      logMeta[key] = value
-    }
+    logMeta[key] = serializeUnknownError(value)
   }
 
   const logData = {
@@ -111,3 +103,44 @@ export default createLogger({
   },
   transports: [...FileTransport(), ...consoleTransport()]
 })
+
+function normalizeLogMeta(info: Record<PropertyKey, unknown>) {
+  const meta = (info.meta ?? {}) as Record<string, unknown>
+  const splat = (info[splatSymbol] ?? []) as unknown[]
+  const normalized: Record<string, unknown> = { ...meta }
+
+  splat.forEach((value, index) => {
+    if (value instanceof Error) {
+      normalized.error = serializeUnknownError(value)
+      return
+    }
+
+    if (
+      value &&
+      typeof value === 'object' &&
+      !Array.isArray(value) &&
+      !(value instanceof Date)
+    ) {
+      const objectValue = value as Record<string, unknown>
+
+      if (objectValue.meta && typeof objectValue.meta === 'object') {
+        Object.assign(normalized, objectValue.meta)
+
+        const { meta: _meta, ...rest } = objectValue
+        Object.assign(normalized, rest)
+        return
+      }
+
+      Object.assign(normalized, objectValue)
+      return
+    }
+
+    normalized[`arg${index}`] = value
+  })
+
+  for (const [key, value] of Object.entries(normalized)) {
+    normalized[key] = serializeUnknownError(value)
+  }
+
+  return normalized
+}

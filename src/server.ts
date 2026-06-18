@@ -25,3 +25,8 @@ process.on('uncaughtException', (error) => {
   logger.error('Uncaught Exception:', error)
   process.exit(1)
 })
+
+process.on('SIGTERM', (error) => {
+  logger.error('Uncaught Exception:', error)
+  process.exit(1)
+})
