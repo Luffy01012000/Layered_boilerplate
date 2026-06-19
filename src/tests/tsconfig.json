@@ -29,7 +29,7 @@
     // "noPropertyAccessFromIndexSignature": true,
 
     "paths": {
-      "#shared/*": ["./src/shared/*"],
+      "@shared/*": ["./src/shared/*"],
       "#prismagenerated/*": ["./src/shared/generated/*"],
       "#authService/*": ["./src/services/auth/*"]
     },

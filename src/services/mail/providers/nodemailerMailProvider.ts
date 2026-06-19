@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 
-import config from '#shared/config/index.js'
+import config from '@shared/config/index.js'
 import type {
   MailProvider,
   SendMailInput,

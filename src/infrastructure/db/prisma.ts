@@ -1,7 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 // import { PrismaClient } from '#prismagenerated/prisma/client.js'
 import { PrismaClient } from '@prisma/client'
-import logger from './logger.js'
+import logger from '@shared/config/logger.js'
 
 const connectionString = `${process.env.DATABASE_URL}`
 

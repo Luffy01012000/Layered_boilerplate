@@ -2,6 +2,9 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import compression from 'compression'
+// import rateLimit from 'express-rate-limit';
+import hpp from 'hpp'
 
 import authRouter from './services/auth/routes/authRouter.js'
 import fileRouter from './services/file/routes/fileRouter.js'
@@ -13,11 +16,14 @@ export const createServer = () => {
   const app = express()
   app
     .disable('x-powered-by')
+    .set('trust proxy', 1)
     .use(morgan('dev'))
     .use(express.urlencoded({ extended: true }))
     .use(express.json())
     .use(cookieParser())
     .use(cors())
+    .use(compression())
+    .use(hpp())
 
   app.get('/healthz', (req, res) => {
     return res.json({ ok: true, environment: process.env.NODE_ENV })

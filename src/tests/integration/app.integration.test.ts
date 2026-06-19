@@ -2,7 +2,7 @@ import request from 'supertest'
 import { beforeAll, afterAll, describe, expect, it } from 'vitest'
 
 import app from '#app.js'
-import { prisma } from '#shared/config/prisma.js'
+import { prisma } from '@shared/config/prisma.js'
 
 describe('Auth E2E', () => {
   beforeAll(async () => {

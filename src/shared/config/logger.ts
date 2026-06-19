@@ -4,7 +4,7 @@ import { createLogger, format, transports } from 'winston'
 import {
   ConsoleTransportInstance,
   FileTransportInstance
-} from 'winston/lib/winston/transports'
+} from 'winston/lib/winston/transports/index.js'
 import config, { Environment } from '../config/index.js'
 import { red, blue, yellow, green, magenta } from 'colorette'
 import { fileURLToPath } from 'node:url'

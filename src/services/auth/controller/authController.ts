@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import ResponseFormatter from '#shared/utils/responseFormatter.js'
+import ResponseFormatter from '@shared/utils/responseFormatter.js'
 import { IAuthService } from '../interfaces/authService.js'
 
 /**

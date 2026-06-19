@@ -8,9 +8,12 @@
     "allowJs": true,
 
     // Environment Settings
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    // "module": "ESNext",
+    // "moduleResolution": "bundler",
 
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
@@ -29,8 +32,10 @@
     // "noPropertyAccessFromIndexSignature": true,
 
     "paths": {
-      "#shared/*": ["./src/shared/*"],
-      "#prismagenerated/*": ["./src/shared/generated/*"]
+      "@shared/*": ["./src/shared/*"],
+      "#prismagenerated/*": ["./src/shared/generated/*"],
+      "@infra/*": ["./src/infrastructure/*"],
+      
     },
 
     // Recommended Options

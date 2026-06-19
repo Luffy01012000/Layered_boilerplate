@@ -1,8 +1,8 @@
 import type { Prisma, User } from '@prisma/client'
 
 import BaseRepository from './BaseRepository.js'
-import logger from '#shared/config/logger.js'
-import { prisma } from '#shared/config/prisma.js'
+import logger from '@shared/config/logger.js'
+import { prisma } from '@infra/db/prisma.js'
 
 export default class PrismaUserRepository extends BaseRepository<
   User,

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { AuthService } from '#authService/service/authService.ts'
 import type { IUserRepository } from '#authService/interfaces/userRepository.ts'
-import { APPLICATION_ROLES } from '#shared/constants/roles.ts'
+import { APPLICATION_ROLES } from '@shared/constants/roles.ts'
 
 describe('AuthService', () => {
   it('creates a user', async () => {

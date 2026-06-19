@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
-import ResponseFormatter from '#shared/utils/responseFormatter.js'
+import ResponseFormatter from '@shared/utils/responseFormatter.js'
 import type FileService from '../service/fileService.js'
 
 export default class FileController {

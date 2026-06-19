@@ -1,4 +1,4 @@
-import AppError from '#shared/utils/AppError.js'
+import AppError from '@shared/utils/AppError.js'
 import type {
   MailProvider,
   SendMailInput,

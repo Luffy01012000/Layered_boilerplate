@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
-import ResponseFormatter from '#shared/utils/responseFormatter.js'
+import ResponseFormatter from '@shared/utils/responseFormatter.js'
 import type PaymentService from '../service/paymentService.js'
 
 export default class PaymentController {

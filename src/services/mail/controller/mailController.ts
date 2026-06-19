@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express'
 
-import ResponseFormatter from '#shared/utils/responseFormatter.js'
+import ResponseFormatter from '@shared/utils/responseFormatter.js'
 import type MailService from '../service/mailService.js'
 
 export default class MailController {

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { APPLICATION_ROLES } from '#shared/constants/roles.js'
+import { APPLICATION_ROLES } from '@shared/constants/roles.js'
 
 const name = z.string().trim().min(1, 'Name is required')
 const email = z.email('Email must be valid').toLowerCase()

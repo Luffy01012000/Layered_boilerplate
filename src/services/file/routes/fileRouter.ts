@@ -1,7 +1,7 @@
 import express from 'express'
 
-import authenticate from '#shared/middlewares/authenticate.js'
-import requestLogger from '#shared/middlewares/requestLogger.js'
+import authenticate from '@shared/middlewares/authenticate.js'
+import requestLogger from '@shared/middlewares/requestLogger.js'
 import dependencies from '../Dependencies/dependencies.js'
 import { upload } from '../middlewares/upload.js'
 
