@@ -2,7 +2,7 @@ import DotenvFlow from 'dotenv-flow'
 DotenvFlow.config()
 
 import { createServer } from './app.js'
-import logger from '@shared/config/logger.js'
+import logger from '@shared/lib/logger.js'
 import config from '@shared/config/index.js'
 
 const port = process.env.PORT || 3001

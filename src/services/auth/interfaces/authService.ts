@@ -1,19 +1,16 @@
-import type { User } from '@prisma/client'
+import type { Employee } from '@prisma/client'
 import { RegisterDto } from '../dto/register.dto.js'
 
-type SafeUser = Omit<User, 'passwordHash'>
+type SafeUser = Omit<Employee, 'password'>
 
 export interface IAuthService {
   login(
-    name: string,
+    email: string,
     password: string
   ): Promise<{ user: SafeUser; token: string }>
 
   register(data: RegisterDto): Promise<{ user: SafeUser; token: string }>
 
-  onboardSuperAdmin(
-    data: RegisterDto
-  ): Promise<{ user: SafeUser; token: string }>
-
-  getProfile(userId: number): Promise<SafeUser>
+  getProfile(userId: string): Promise<SafeUser>
+  deleteEmp(userId: string): Promise<SafeUser>
 }

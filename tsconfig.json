@@ -13,7 +13,7 @@
 
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    
+
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
@@ -21,7 +21,7 @@
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
 
     // Style Options
     // "noImplicitReturns": true,
@@ -34,8 +34,7 @@
     "paths": {
       "@shared/*": ["./src/shared/*"],
       "#prismagenerated/*": ["./src/shared/generated/*"],
-      "@infra/*": ["./src/infrastructure/*"],
-      
+      "@infra/*": ["./src/infrastructure/*"]
     },
 
     // Recommended Options

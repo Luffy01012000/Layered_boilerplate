@@ -1,20 +1,29 @@
-import type { User } from '@prisma/client'
+import type { Employee, Prisma } from '@prisma/client'
 
 export type CreateUserInput = {
   email: string
   name: string
-  passwordHash: string
-  role: string
+  password: string
+  roleId?: string
 }
 
+export type EmployeeWithRole = Prisma.EmployeeGetPayload<{
+  include: {
+    role: true
+  }
+}>
+
 export interface IUserRepository {
-  findByEmail(email: string): Promise<User | null>
+  findByEmail(email: string): Promise<Employee | null>
 
-  findAll(): Promise<User[]>
+  findAll(): Promise<Employee[]>
 
-  findByUsername(name: string): Promise<User | null>
+  // findByUsername(name: string): Promise<Employee | null>
+  findProfile(id: string): Promise<Employee | null>
 
-  findById(id: number): Promise<User | null>
+  findById(id: string): Promise<Employee | null>
+  findByIdWithRole(id: string): Promise<EmployeeWithRole | null>
 
-  create(data: CreateUserInput): Promise<User>
+  create(data: CreateUserInput): Promise<Employee>
+  delete(id: string): Promise<Employee>
 }

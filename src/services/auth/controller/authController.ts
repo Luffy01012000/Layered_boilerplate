@@ -16,43 +16,6 @@ export class AuthController {
   }
 
   /**
-   * Onboards a new super admin user.
-   * @param {Request} req - The request object containing user details.
-   * @param {Response} res - The response object used to send the response.
-   * @param {Function} next - The next middleware function in the request-response cycle.
-   */
-  async onboardSuperAdmin(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { name, email, password } = req.body
-      const superAdminData = {
-        name,
-        email,
-        password
-      }
-
-      const { token, user } =
-        await this.authService.onboardSuperAdmin(superAdminData)
-
-      res.cookie('authToken', token, {
-        httpOnly: true,
-        sameSite: 'lax'
-      })
-
-      res
-        .status(201)
-        .json(
-          ResponseFormatter.success(
-            { user, token },
-            'Super admin created successfully',
-            201
-          )
-        )
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  /**
    * Registers a new user.
    * @param {Request} req - The request object containing user details.
    * @param {Response} res - The response object used to send the response.
@@ -97,8 +60,8 @@ export class AuthController {
    */
   async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, password } = req.body
-      const { user, token } = await this.authService.login(name, password)
+      const { email, password } = req.body
+      const { user, token } = await this.authService.login(email, password)
 
       res.cookie('authToken', token, {
         httpOnly: true,
@@ -152,6 +115,19 @@ export class AuthController {
       res
         .status(200)
         .json(ResponseFormatter.success(null, 'Logout successful', 200))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async deleteEmp(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = res.locals.user.userId
+      const result = await this.authService.deleteEmp(userId)
+
+      res
+        .status(200)
+        .json(ResponseFormatter.success(result, 'Emp deleted successful', 200))
     } catch (error) {
       next(error)
     }

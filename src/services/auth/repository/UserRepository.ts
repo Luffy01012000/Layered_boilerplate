@@ -1,17 +1,19 @@
-import type { Prisma, User } from '@prisma/client'
+import { Prisma, Employee } from '@prisma/client'
 
 import BaseRepository from './BaseRepository.js'
-import logger from '@shared/config/logger.js'
+import logger from '@shared/lib/logger.js'
 import { prisma } from '@infra/db/prisma.js'
+import { EmployeeWithRole } from '#authService/interfaces/userRepository.js'
+import { ConflictError } from '@shared/errors/ConflictError.js'
 
 export default class PrismaUserRepository extends BaseRepository<
-  User,
-  Prisma.UserCreateInput,
-  number
+  Employee,
+  Prisma.EmployeeCreateInput,
+  string
 > {
-  async create(data: Prisma.UserCreateInput): Promise<User> {
+  async create(data: Prisma.EmployeeCreateInput): Promise<Employee> {
     try {
-      const user = await prisma.user.create({
+      const user = await prisma.employee.create({
         data
       })
 
@@ -28,37 +30,45 @@ export default class PrismaUserRepository extends BaseRepository<
     }
   }
 
-  async findById(id: number): Promise<User | null> {
+  async findById(id: string): Promise<Employee | null> {
+    return await prisma.employee.findUnique({
+      where: {
+        id,
+        deletedAt: null
+      }
+    })
+  }
+
+  async findByEmail(email: string): Promise<Employee | null> {
     try {
-      return await prisma.user.findUnique({
+      return await prisma.employee.findFirst({
         where: {
-          id
+          email,
+          deletedAt: null
         }
       })
     } catch (error) {
-      logger.error('Error finding user by id', error)
+      logger.error('Error finding user by email', error)
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictError('Email already exists')
+      }
+
       throw error
     }
   }
 
-  async findByUsername(name: string): Promise<User | null> {
+  async findProfile(id: string): Promise<Employee | null> {
     try {
-      return await prisma.user.findUnique({
+      return await prisma.employee.findUnique({
         where: {
-          name
-        }
-      })
-    } catch (error) {
-      logger.error('Error finding user by username', error)
-      throw error
-    }
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    try {
-      return await prisma.user.findUnique({
-        where: {
-          email
+          id,
+          deletedAt: null
+        },
+        include: {
+          profile: true
         }
       })
     } catch (error) {
@@ -67,11 +77,89 @@ export default class PrismaUserRepository extends BaseRepository<
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<Employee[]> {
     try {
-      return await prisma.user.findMany()
+      return await prisma.employee.findMany()
     } catch (error) {
       logger.error('Error finding all users', error)
+      throw error
+    }
+  }
+
+  async findByIdWithRole(id: string): Promise<EmployeeWithRole | null> {
+    try {
+      return await prisma.employee.findUnique({
+        where: { id },
+        include: {
+          role: true
+        }
+      })
+    } catch (error) {
+      logger.error('Error finding employee', error)
+      throw error
+    }
+  }
+  async update(
+    id: string,
+    payload: object
+  ): Promise<{
+    id: string
+    email: string
+    name: string
+    password: string
+    managerId: string | null
+    departmentId: string
+    roleId: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+  }> {
+    try {
+      const udpatedEmp = await prisma.employee.update({
+        where: { id },
+        data: payload
+      })
+
+      logger.info('Emp updated:', {
+        meta: {
+          udpatedEmp
+        }
+      })
+      return udpatedEmp
+    } catch (error) {
+      logger.error('Error updating employee', error)
+      throw error
+    }
+  }
+
+  async delete(id: string): Promise<{
+    id: string
+    email: string
+    name: string
+    password: string
+    managerId: string | null
+    departmentId: string
+    roleId: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
+  }> {
+    try {
+      const deletedEmp = await prisma.employee.update({
+        where: { id, deletedAt: null },
+        data: {
+          deletedAt: new Date()
+        }
+      })
+
+      logger.info('Emp deletedEmp:', {
+        meta: {
+          deletedEmp
+        }
+      })
+      return deletedEmp
+    } catch (error) {
+      logger.error('Error updating employee', error)
       throw error
     }
   }

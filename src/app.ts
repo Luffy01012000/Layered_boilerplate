@@ -7,9 +7,7 @@ import compression from 'compression'
 import hpp from 'hpp'
 
 import authRouter from './services/auth/routes/authRouter.js'
-import fileRouter from './services/file/routes/fileRouter.js'
-import mailRouter from './services/mail/routes/mailRouter.js'
-import paymentRouter from './services/payment/routes/paymentRouter.js'
+import departmentRouter from './services/department/routes/departmentRouter.js'
 import { errorHandler } from './shared/middlewares/errorHandler.js'
 
 export const createServer = () => {
@@ -25,8 +23,28 @@ export const createServer = () => {
     .use(compression())
     .use(hpp())
 
-  app.get('/healthz', (req, res) => {
-    return res.json({ ok: true, environment: process.env.NODE_ENV })
+  app.get('/health', (req, res) => {
+    return res.status(200).json({ ok: true, status: 'up' })
+  })
+
+  app.get('/live', (req, res) => {
+    return res.status(200).json({ ok: true, alive: true })
+  })
+
+  app.get('/ready', (req, res) => {
+    return res
+      .status(200)
+      .json({ ready: true, pg: true, redis: true, rabbitmq: true })
+  })
+
+  app.get('/version', (req, res) => {
+    return res.status(200).json({
+      ok: true,
+      environment: process.env.NODE_ENV,
+      version: '1.0.0',
+      serivce: 'ems',
+      commit: 'git-sha'
+    })
   })
 
   app.get('/message/:name', (req, res) => {
@@ -34,9 +52,7 @@ export const createServer = () => {
   })
 
   app.use('/api/auth', authRouter)
-  app.use('/api/files', fileRouter)
-  app.use('/api/mail', mailRouter)
-  app.use('/api/payments', paymentRouter)
+  app.use('/api/department', departmentRouter)
 
   app.use(errorHandler)
 

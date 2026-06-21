@@ -11,12 +11,6 @@ const role = z.enum([
   APPLICATION_ROLES.USER
 ])
 
-export const onboardSuperAdminSchema = z.object({
-  name,
-  email,
-  password
-})
-
 export const registrationSchema = z.object({
   name,
   email,
@@ -25,10 +19,9 @@ export const registrationSchema = z.object({
 })
 
 export const loginSchema = z.object({
-  name,
+  email,
   password: z.string().min(1, 'Password is required')
 })
 
-export type OnboardSuperAdminInput = z.infer<typeof onboardSuperAdminSchema>
 export type RegistrationInput = z.infer<typeof registrationSchema>
 export type LoginInput = z.infer<typeof loginSchema>
