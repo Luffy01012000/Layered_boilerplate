@@ -9,17 +9,22 @@ import { RegisterDto } from '../dto/register.dto.js'
 import type { Employee } from '@prisma/client'
 import { UnauthorizedError } from '@shared/errors/UnauthorizedError.js'
 import { NotFoundError } from '@shared/errors/NotFoundError.js'
+import { JwtService } from '@shared/lib/jwt/jwt.service.js'
 
 /**
  * AuthService handles user authentication and authorization related operations such as onboarding super admin, user registration, login, and fetching user profile.
  * It interacts with the UserRepository to perform these operations and generates JWT tokens for authenticated users.
  */
 export class AuthService {
-  constructor(private readonly userRepository: IUserRepository) {
+  constructor(
+    private readonly userRepository: IUserRepository,
+    private readonly jwtService: JwtService
+  ) {
     if (!userRepository) {
       throw new Error('UserRepository is Required')
     }
     this.userRepository = userRepository
+    this.jwtService = jwtService
   }
 
   /**
@@ -35,7 +40,7 @@ export class AuthService {
     }
 
     return jwt.sign(payload, config.jwt.secret, {
-      expiresIn: config.jwt.expiresIn
+      expiresIn: config.jwt.accessExpiresIn
     })
   }
 
@@ -78,7 +83,11 @@ export class AuthService {
         roleId: dto.role,
         password: passwordHash
       })
-      const token = this.generateToken(user)
+      const token = this.jwtService.signAccessToken({
+        userId: user.id,
+        email: user.email,
+        roleId: user.roleId
+      })
 
       logger.info('User registered successfully', {
         meta: {
@@ -116,7 +125,11 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new AppError('Invalid credentials', 401)
     }
-    const token = this.generateToken(user)
+    const token = this.jwtService.signAccessToken({
+      userId: user.id,
+      email: user.email,
+      roleId: user.roleId
+    })
 
     logger.info('User logged in successfully', {
       meta: { username: user.name, email: user.email }

@@ -37,8 +37,14 @@ const config = {
 
   jwt: {
     secret: required('JWT_SECRET'),
-    expiresIn:
-      (process.env.JWT_EXPIRES_IN! as StringValue) ?? ('24h' as StringValue)
+    accessSecret: required('JWT_ACCESS_SECRET'),
+    refreshSecret: required('JWT_REFRESH_SECRET'),
+    accessExpiresIn:
+      (process.env.JWT_ACCESS_EXPIRES_IN! as StringValue) ??
+      ('15m' as StringValue),
+    refreshExpiresIn:
+      (process.env.JWT_REFRESH_EXPIRES_IN! as StringValue) ??
+      ('7d' as StringValue)
   },
 
   mail: {

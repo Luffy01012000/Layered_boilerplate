@@ -1,6 +1,7 @@
 import { AuthController } from '../controller/authController.js'
 import { AuthService } from '../service/authService.js'
 import PrismaUserRepository from '../repository/UserRepository.js'
+import { jwtService } from '@shared/lib/jwt/index.js'
 
 /**
  * Dependency Injection Container for the Auth module.
@@ -15,8 +16,11 @@ class Container {
     }
 
     // Initialize services with their respective repositories
+
+    const authService = new AuthService(repositories.userRepository, jwtService)
+
     const services = {
-      authService: new AuthService(repositories.userRepository)
+      authService
     }
 
     // Initialize controllers with their respective services

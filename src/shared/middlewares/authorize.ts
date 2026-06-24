@@ -5,7 +5,7 @@ import type { ApplicationRole } from '../constants/roles.js'
 
 export default function authorize(allowedRoles: ApplicationRole[]) {
   return (_req: Request, res: Response, next: NextFunction) => {
-    const role = res.locals.user?.role
+    const role = res.locals.user?.roleId
 
     if (!role || !allowedRoles.includes(role)) {
       return res

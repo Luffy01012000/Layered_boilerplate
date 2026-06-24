@@ -4,6 +4,8 @@ import { Decimal } from '@prisma/client/runtime/client'
 import { prisma } from '@infra/db/prisma.js'
 import { safeEmp } from '../interface/empRepo.js'
 import { EmployeeQueryDto } from '../validation/empQuery.js'
+import { Prisma } from '@prisma/client'
+import { NotFoundError } from '@shared/errors/NotFoundError.js'
 
 export class EmpRepo extends BaseRepository<
   safeEmp,
@@ -65,7 +67,7 @@ export class EmpRepo extends BaseRepository<
 
   async findById(id: string): Promise<safeEmp | null> {
     return await prisma.employee.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
       omit: {
         password: true
       }
@@ -74,7 +76,7 @@ export class EmpRepo extends BaseRepository<
 
   async findEmpManager(id: string): Promise<safeEmp | null> {
     return await prisma.employee.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
       include: {
         manager: true
       },
@@ -86,10 +88,56 @@ export class EmpRepo extends BaseRepository<
 
   async findManagerTeam(id: string): Promise<safeEmp | null> {
     return await prisma.employee.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
       include: {
         subordinates: true
       },
+      omit: {
+        password: true
+      }
+    })
+  }
+
+  async findEmpWithDepRole(query: EmployeeQueryDto): Promise<safeEmp[] | null> {
+    const { page, limit, search, departmentId, roleId, sortBy, sortOrder } =
+      query
+    return await prisma.employee.findMany({
+      where: {
+        deletedAt: null,
+        ...(search && {
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: 'insensitive'
+              }
+            },
+            {
+              email: {
+                contains: search,
+                mode: 'insensitive'
+              }
+            }
+          ]
+        }),
+
+        ...(departmentId && {
+          departmentId
+        }),
+
+        ...(roleId && {
+          roleId
+        })
+      },
+      include: {
+        department: true,
+        role: true
+      },
+      orderBy: {
+        [sortBy]: sortOrder
+      },
+      skip: (page - 1) * limit,
+      take: limit,
       omit: {
         password: true
       }
@@ -131,11 +179,25 @@ export class EmpRepo extends BaseRepository<
   }
 
   async delete(id: string): Promise<safeEmp> {
-    return await prisma.employee.delete({
-      where: { id },
-      omit: {
-        password: true
+    try {
+      return await prisma.employee.update({
+        where: { id, deletedAt: null },
+        data: {
+          deletedAt: new Date().toISOString()
+        },
+        omit: {
+          password: true
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundError('Employee not found')
       }
-    })
+
+      throw error
+    }
   }
 }
