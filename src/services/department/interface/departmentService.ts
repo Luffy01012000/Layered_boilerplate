@@ -8,6 +8,11 @@ export interface IDepartmentService {
   createDepartment(dto: createDepartmentDto): Promise<Department>
   getAllDepartment(): Promise<Department[] | []>
   getDepartment(id: string): Promise<Department | null>
+  getDepartmentStats(name: string): Promise<{
+    department: string
+    employeeCount: number
+    averageSalary: number
+  } | null>
   updateDepartment(
     id: string,
     dto: updateDepartmentDto

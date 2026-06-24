@@ -6,6 +6,7 @@ import type {
 import { IDepartmentRepo } from '../interface/departmentRepo.js'
 import { ConflictError } from '@shared/errors/ConflictError.js'
 import { NotFoundError } from '@shared/errors/NotFoundError.js'
+// import logger from '@shared/lib/logger.js'
 
 export class DepartmentService {
   constructor(private readonly departmentRepo: IDepartmentRepo) {
@@ -34,8 +35,11 @@ export class DepartmentService {
   }
 
   async getDepartment(id: string) {
-    const department = await this.departmentRepo.findById(id)
-    if (!department) throw new NotFoundError('Department not found!')
+    return await this.departmentRepo.findById(id)
+  }
+
+  async getDepartmentStats(name: string) {
+    const department = await this.departmentRepo.findDepartmentStats(name)
     return department
   }
 

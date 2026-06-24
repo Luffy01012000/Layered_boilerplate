@@ -1,6 +1,6 @@
-import BaseRepository from './baseRepo.js'
 import { Department, Prisma } from '@prisma/client'
-import { prisma } from '#infra/db/prisma.js'
+import { prisma } from '@infra/db/prisma.js'
+import BaseRepository from './baseRepo.js'
 import { NotFoundError } from '@shared/errors/NotFoundError.js'
 import { updateDepartmentDto } from '../dto/Department.dto.js'
 
@@ -30,23 +30,77 @@ export default class DepartmentRepo extends BaseRepository<
   }
 
   async findById(id: string): Promise<Department | null> {
-    const resData = await prisma.department.findUnique({
-      where: {
-        id
+    try {
+      return await prisma.department.findUnique({
+        where: {
+          id
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundError('Department not found')
       }
-    })
 
-    return resData
+      throw error
+    }
   }
 
   async findByName(name: string): Promise<Department | null> {
-    const resData = await prisma.department.findFirst({
+    try {
+      return await prisma.department.findUnique({
+        where: {
+          name
+        }
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundError('Department not found')
+      }
+
+      throw error
+    }
+  }
+
+  async findDepartmentStats(name: string): Promise<any | null> {
+    const department = await prisma.department.findUnique({
       where: {
         name
+      },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            employees: true
+          }
+        }
       }
     })
 
-    return resData
+    if (!department) {
+      throw new NotFoundError('Department not found')
+    }
+
+    const avgSalary = await prisma.employee.aggregate({
+      where: {
+        departmentId: department.id
+      },
+      _avg: {
+        salary: true
+      }
+    })
+
+    return {
+      department: department.name,
+      employeeCount: department._count.employees,
+      averageSalary: avgSalary._avg.salary ?? 0
+    }
   }
 
   async update(id: string, payload: updateDepartmentDto): Promise<Department> {

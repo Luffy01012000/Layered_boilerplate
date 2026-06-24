@@ -7,3 +7,8 @@ export const departmentQuerySchema = z.object({
 
   search: z.string().optional()
 })
+export const departmentStatsQuerySchema = z.object({
+  limit: z.coerce.number().int().positive().max(100).default(10),
+
+  name: z.string().optional()
+})

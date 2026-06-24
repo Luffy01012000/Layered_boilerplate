@@ -71,6 +71,22 @@ export class DepartmentController {
       )
   }
 
+  async getDepartmentStats(req: Request, res: Response) {
+    const resData = await this.departmentService.getDepartmentStats(
+      req?.query?.name as string
+    )
+
+    res
+      .status(200)
+      .json(
+        ResponseFormatter.success(
+          resData,
+          responseMessage.SUCCESSFN('Fetch department'),
+          200
+        )
+      )
+  }
+
   async deleteDepartment(req: Request, res: Response) {
     const resData = await this.departmentService.deleteDepartment(
       req?.params?.id as string

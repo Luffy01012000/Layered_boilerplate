@@ -5,6 +5,7 @@ import logger from '@shared/lib/logger.js'
 import { prisma } from '@infra/db/prisma.js'
 import { EmployeeWithRole } from '#authService/interfaces/userRepository.js'
 import { ConflictError } from '@shared/errors/ConflictError.js'
+import { Decimal } from '@prisma/client/runtime/client'
 
 export default class PrismaUserRepository extends BaseRepository<
   Employee,
@@ -106,6 +107,7 @@ export default class PrismaUserRepository extends BaseRepository<
     id: string
     email: string
     name: string
+    salary: Decimal
     password: string
     managerId: string | null
     departmentId: string
@@ -137,6 +139,7 @@ export default class PrismaUserRepository extends BaseRepository<
     email: string
     name: string
     password: string
+    salary: Decimal
     managerId: string | null
     departmentId: string
     roleId: string
