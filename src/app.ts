@@ -15,9 +15,5 @@ export const createServer = () => {
     return res.json({ ok: true, environment: process.env.NODE_ENV })
   })
 
-  app.get('/message/:name', (req, res) => {
-    return res.json({ message: `hello ${req.params.name}` })
-  })
-
   return app
 }
