@@ -16,7 +16,7 @@ model Department {
   description String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   @@index([name])
 }
 

@@ -44,6 +44,7 @@ export async function seedEmployees(prisma: PrismaClient) {
     create: {
       name: 'System Admin',
       email: 'admin@test.com',
+      salary: 1200000,
       password,
       roleId: adminRole!.id,
       departmentId: engineeringDepartment!.id
@@ -60,6 +61,7 @@ export async function seedEmployees(prisma: PrismaClient) {
     create: {
       name: 'Engineering Manager',
       email: 'manager@test.com',
+      salary: 1000000,
       password,
       roleId: managerRole!.id,
       departmentId: engineeringDepartment!.id,
@@ -78,6 +80,7 @@ export async function seedEmployees(prisma: PrismaClient) {
     create: {
       name: 'John Doe',
       email: 'employee@test.com',
+      salary: 900000,
       password,
       roleId: employeeRole!.id,
       departmentId: engineeringDepartment!.id,
@@ -96,6 +99,7 @@ export async function seedEmployees(prisma: PrismaClient) {
     create: {
       name: 'HR Executive',
       email: 'hr@test.com',
+      salary: 600000,
       password,
       roleId: employeeRole!.id,
       departmentId: hrDepartment!.id,

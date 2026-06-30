@@ -7,13 +7,6 @@
     "outDir": "./dist",
     "allowJs": true,
 
-    // Environment Settings
-    // "module": "ESNext",
-    // "moduleResolution": "bundler",
-
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-
     // Other Outputs
     "sourceMap": true,
     "declaration": true,

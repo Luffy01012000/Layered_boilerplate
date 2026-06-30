@@ -3,6 +3,8 @@ import ResponseFormatter from '@shared/utils/responseFormatter.js'
 import type { Request, Response } from 'express'
 import { IEmpService } from '../interface/empService.js'
 import { EmployeeQueryDto } from '../validation/empQuery.js'
+import logger from '@shared/lib/logger.js'
+
 export class EmployeeController {
   constructor(private readonly employeeService: IEmpService) {
     this.employeeService = employeeService
@@ -24,6 +26,7 @@ export class EmployeeController {
   async findAllEmployee(req: Request, res: Response) {
     const query = (req as any).validatedQuery as unknown as EmployeeQueryDto
     const emp = await this.employeeService.findAllEmp(query)
+
     res
       .status(200)
       .json(
@@ -35,6 +38,17 @@ export class EmployeeController {
       )
   }
 
+  async getCall(_req: Request, res: Response) {
+    res
+      .status(200)
+      .json(
+        ResponseFormatter.success(
+          await this.employeeService.getCalls(),
+          'Total db calls',
+          200
+        )
+      )
+  }
   async findEmployee(req: Request, res: Response) {
     const emp = await this.employeeService.findEmpById(req.params?.id as string)
     res

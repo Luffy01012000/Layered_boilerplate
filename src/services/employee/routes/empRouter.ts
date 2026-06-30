@@ -25,6 +25,8 @@ router.get(
   asyncHandler(empController.findAllEmployee.bind(empController))
 )
 
+router.get('/getcall', asyncHandler(empController.getCall.bind(empController)))
+
 router.post(
   '/',
   authenticate,
@@ -42,6 +44,7 @@ router.get(
 router.get(
   '/emp-manager/:id',
   authenticate,
+  validateParams(IdSchema),
   validateQuery(employeeQuerySchema),
   asyncHandler(empController.findEmpManager.bind(empController))
 )
@@ -49,6 +52,7 @@ router.get(
 router.get(
   '/manager-team/:id',
   authenticate,
+  validateParams(IdSchema),
   validateQuery(employeeQuerySchema),
   asyncHandler(empController.findManagerTeam.bind(empController))
 )

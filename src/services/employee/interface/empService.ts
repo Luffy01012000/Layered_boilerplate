@@ -8,6 +8,7 @@ export interface IEmpService {
   findEmpById(id: string): Promise<safeEmp | null>
   findEmpManager(id: string): Promise<safeEmp | null>
   findManagerTeam(id: string): Promise<safeEmp | null>
+  getCalls(): Promise<number>
   findTopPaidEmp(query: EmployeeQueryDto): Promise<
     | {
         name: string
