@@ -26,8 +26,9 @@
 
     "paths": {
       "@shared/*": ["./src/shared/*"],
-      "#prismagenerated/*": ["./src/shared/generated/*"],
-      "@infra/*": ["./src/infrastructure/*"]
+      "@prismagenerated/*": ["./src/shared/generated/*"],
+      "@infra/*": ["./src/infra/*"],
+      "@config/*": ["./src/shared/configs/*"]
     },
 
     // Recommended Options
@@ -46,6 +47,8 @@
     "build",
     "src/shared/generated",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/infra/db/umzug.ts",
+    "src/infra/db/migrations/**/*"
   ]
 }

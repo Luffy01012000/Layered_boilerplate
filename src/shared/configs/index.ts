@@ -1,5 +1,5 @@
-import dotenvFlow from 'dotenv-flow'
 import type { StringValue } from 'ms'
+import dotenvFlow from 'dotenv-flow'
 dotenvFlow.config()
 
 function required(name: string): string {
@@ -23,8 +23,15 @@ const config = {
 
   port: Number(process.env.PORT ?? 5000),
 
-  postgres: {
-    database_url: required('DATABASE_URL')
+  db: {
+    DATABASE_URL: required('DATABASE_URL'),
+    DB_WRITE_URL: required('DATABASE_URL'),
+    DB_READ_URL: required('DATABASE_READ_URL'),
+    POOL_MAX: Number(process.env.DB_POOL_MAX ?? 10),
+    POOL_MIN: Number(process.env.DB_POOL_MIN ?? 1),
+    POOL_IDLE: Number(process.env.DB_POOL_IDLE ?? 10000),
+    POOL_ACQUIRE: Number(process.env.DB_POOL_ACQUIRE ?? 60000),
+    POOL_EVICT: Number(process.env.DB_POOL_EVICT ?? 1000)
   },
 
   //   rabbitmq: {

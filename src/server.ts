@@ -3,13 +3,15 @@ DotenvFlow.config()
 
 import logger from '@shared/lib/logger.js'
 import config from '@shared/configs/index.js'
+import { connectDB } from '@infra/db/sequelize.js'
 
 import { createServer } from './app.js'
 
 const port = process.env.PORT || 3001
 const server = createServer()
 
-server.listen(port, () => {
+server.listen(port, async () => {
+  await connectDB()
   logger.info(`api running on ${port}`, {
     meta: {
       env: config.node_env,
