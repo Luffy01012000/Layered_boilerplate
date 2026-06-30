@@ -28,7 +28,8 @@ export default class User extends Model<
 > {
   @Column({
     primaryKey: true,
-    type: DataType.UUID
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4
   })
   declare id: CreationOptional<string>
 

@@ -3,7 +3,8 @@ import { DataTypes, Sequelize } from 'sequelize'
 import type { Migration } from '../umzug.js'
 
 export const up: Migration = async ({ context }) => {
-  await context.createTable('users', {
+  const queryInterface = context.getQueryInterface()
+  await queryInterface.createTable('users', {
     id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -33,5 +34,6 @@ export const up: Migration = async ({ context }) => {
 }
 
 export const down: Migration = async ({ context }) => {
-  await context.dropTable('users')
+  const queryInterface = context.getQueryInterface()
+  await queryInterface.bulkDelete('users', {})
 }

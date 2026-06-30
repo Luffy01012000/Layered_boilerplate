@@ -7,12 +7,14 @@ import { Options } from 'sequelize'
 import config from '@config/index.js'
 import logger from '@shared/lib/logger.js'
 
+import User from './models/user.model.js'
+import Post from './models/post.model.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export const sequelize = new Sequelize(config.db.DATABASE_URL, {
   dialect: 'postgres',
-  models: [__dirname + '/models'],
+  models: [User, Post],
 
   // replication: {
   //   write: {
@@ -55,6 +57,20 @@ export const connectDB = async (): Promise<void> => {
     await sequelize.authenticate()
     await sequelize.sync({ alter: config.node_env === 'development' })
     logger.info('Database Connected!')
+  } catch (err) {
+    logger.error('DB connection failed:', {
+      meta: {
+        error: err
+      }
+    })
+    process.exit(1)
+  }
+}
+
+export const disConnectDB = async (): Promise<void> => {
+  try {
+    await sequelize.close()
+    logger.info('Connection closed successfully.')
   } catch (err) {
     logger.error('DB connection failed:', {
       meta: {

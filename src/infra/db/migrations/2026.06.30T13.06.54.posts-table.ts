@@ -3,7 +3,8 @@ import { DataTypes, Sequelize } from 'sequelize'
 import type { Migration } from '../umzug.js'
 
 export const up: Migration = async ({ context }) => {
-  await context.createTable('posts', {
+  const queryInterface = context.getQueryInterface()
+  await queryInterface.createTable('posts', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -51,18 +52,19 @@ export const up: Migration = async ({ context }) => {
     }
   })
 
-  await context.addIndex('posts', ['user_id'], {
+  await queryInterface.addIndex('posts', ['user_id'], {
     name: 'idx_posts_user_id'
   })
 
-  await context.addIndex('posts', ['published'], {
+  await queryInterface.addIndex('posts', ['published'], {
     name: 'idx_posts_published'
   })
 }
 
 export const down: Migration = async ({ context }) => {
-  await context.removeIndex('posts', 'idx_posts_published')
-  await context.removeIndex('posts', 'idx_posts_user_id')
+  const queryInterface = context.getQueryInterface()
+  await queryInterface.removeIndex('posts', 'idx_posts_published')
+  await queryInterface.removeIndex('posts', 'idx_posts_user_id')
 
-  await context.dropTable('posts')
+  await queryInterface.dropTable('posts')
 }

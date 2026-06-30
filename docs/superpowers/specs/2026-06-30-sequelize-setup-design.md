@@ -105,7 +105,13 @@ client → express
 
 ```ts
 // src/shared/repo-extensions/SequelizeRepository.ts
-import { Op, type Model, type ModelStatic, type Order, type WhereOptions } from 'sequelize'
+import {
+  Op,
+  type Model,
+  type ModelStatic,
+  type Order,
+  type WhereOptions
+} from 'sequelize'
 import { NotFoundError } from '@shared/errors/NotFoundError.js'
 import BaseRepository from '@shared/repo/baseRepo.js'
 
@@ -141,15 +147,18 @@ export default class SequelizeRepository<
     return this.model.findByPk(id as any)
   }
 
-  async findAll(opts: FindAllOpts<TEntity> = {}): Promise<{ rows: TEntity[]; count: number }> {
+  async findAll(
+    opts: FindAllOpts<TEntity> = {}
+  ): Promise<{ rows: TEntity[]; count: number }> {
     const { offset, limit, search, where = {}, order } = opts
-    const searchWhere = search && this.opts.searchFields?.length
-      ? {
-          [Op.or]: this.opts.searchFields.map((f) => ({
-            [f]: { [Op.iLike]: `%${search}%` }
-          }))
-        }
-      : {}
+    const searchWhere =
+      search && this.opts.searchFields?.length
+        ? {
+            [Op.or]: this.opts.searchFields.map((f) => ({
+              [f]: { [Op.iLike]: `%${search}%` }
+            }))
+          }
+        : {}
 
     return this.model.findAndCountAll({
       where: { ...searchWhere, ...(where as object) } as any,
@@ -205,7 +214,10 @@ import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '@infra/db/sequelize.js'
 import type { UserAttrs, UserCreationAttrs } from './user.types.js'
 
-export class User extends Model<UserAttrs, UserCreationAttrs> implements UserAttrs {
+export class User
+  extends Model<UserAttrs, UserCreationAttrs>
+  implements UserAttrs
+{
   declare id: string
   declare email: string
   declare passwordHash: string
@@ -224,10 +236,23 @@ export class User extends Model<UserAttrs, UserCreationAttrs> implements UserAtt
 
 User.init(
   {
-    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     email: { type: new DataTypes.STRING(255), allowNull: false, unique: true },
-    passwordHash: { type: new DataTypes.STRING(255), allowNull: false, field: 'password_hash' },
-    roleId: { type: new DataTypes.STRING(32), allowNull: false, defaultValue: 'USER', field: 'role_id' },
+    passwordHash: {
+      type: new DataTypes.STRING(255),
+      allowNull: false,
+      field: 'password_hash'
+    },
+    roleId: {
+      type: new DataTypes.STRING(32),
+      allowNull: false,
+      defaultValue: 'USER',
+      field: 'role_id'
+    },
     createdAt: { type: DataTypes.DATE, allowNull: false, field: 'created_at' },
     updatedAt: { type: DataTypes.DATE, allowNull: false, field: 'updated_at' }
   },
@@ -275,12 +300,20 @@ const { Sequelize, DataTypes } = require('sequelize')
 module.exports = {
   async up({ context: queryInterface }) {
     await queryInterface.createTable('users', {
-      id:            { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
-      email:         { type: DataTypes.STRING(255), allowNull: false, unique: true },
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+      },
+      email: { type: DataTypes.STRING(255), allowNull: false, unique: true },
       password_hash: { type: DataTypes.STRING(255), allowNull: false },
-      role_id:       { type: DataTypes.STRING(32),  allowNull: false, defaultValue: 'USER' },
-      created_at:    { type: DataTypes.DATE, allowNull: false },
-      updated_at:    { type: DataTypes.DATE, allowNull: false }
+      role_id: {
+        type: DataTypes.STRING(32),
+        allowNull: false,
+        defaultValue: 'USER'
+      },
+      created_at: { type: DataTypes.DATE, allowNull: false },
+      updated_at: { type: DataTypes.DATE, allowNull: false }
     })
     await queryInterface.addIndex('users', ['role_id'])
   },
@@ -309,7 +342,11 @@ export const umzug = new Umzug({
     resolve: ({ name, path: migrationPath, context }) => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const migration = require(migrationPath!)
-      return { name, up: async () => migration.up(context), down: async () => migration.down(context) }
+      return {
+        name,
+        up: async () => migration.up(context),
+        down: async () => migration.down(context)
+      }
     }
   },
   context: { queryInterface: sequelize.getQueryInterface() },
@@ -331,8 +368,14 @@ import { runMigrations } from './umzug.js'
 import logger from '@shared/lib/logger.js'
 
 runMigrations()
-  .then(() => { logger.info('migrations complete'); process.exit(0) })
-  .catch((err) => { logger.error('migration failed', { meta: { err } }); process.exit(1) })
+  .then(() => {
+    logger.info('migrations complete')
+    process.exit(0)
+  })
+  .catch((err) => {
+    logger.error('migration failed', { meta: { err } })
+    process.exit(1)
+  })
 ```
 
 `run-migrations-down.ts` is the same shape with `revertLastMigration()`.
@@ -362,9 +405,13 @@ import config from '@shared/configs/index.js'
 
 export const sequelize = new Sequelize(config.postgres.database_url, {
   dialect: 'postgres',
-  pool:    config.postgres.pool,
+  pool: config.postgres.pool,
   logging: false,
-  dialectOptions: { ssl: config.postgres.ssl ? { require: true, rejectUnauthorized: false } : undefined }
+  dialectOptions: {
+    ssl: config.postgres.ssl
+      ? { require: true, rejectUnauthorized: false }
+      : undefined
+  }
 })
 ```
 
@@ -373,20 +420,38 @@ export const sequelize = new Sequelize(config.postgres.database_url, {
 `src/shared/middlewares/errorHandler.ts` gains a Sequelize branch placed after the `AppError` check:
 
 ```ts
-import { UniqueConstraintError, ValidationError, ForeignKeyConstraintError,
-         ConnectionError, DatabaseError } from 'sequelize'
+import {
+  UniqueConstraintError,
+  ValidationError,
+  ForeignKeyConstraintError,
+  ConnectionError,
+  DatabaseError
+} from 'sequelize'
 
 // after the AppError branch:
 if (error instanceof UniqueConstraintError) {
-  return res.status(409).json(ResponseFormatter.error('Resource already exists', 409))
+  return res
+    .status(409)
+    .json(ResponseFormatter.error('Resource already exists', 409))
 }
-if (error instanceof ValidationError || error instanceof ForeignKeyConstraintError) {
-  return res.status(400).json(ResponseFormatter.error('Validation failed', 400,
-    error.errors?.map((e) => ({ path: e.path, message: e.message })) ?? null
-  ))
+if (
+  error instanceof ValidationError ||
+  error instanceof ForeignKeyConstraintError
+) {
+  return res
+    .status(400)
+    .json(
+      ResponseFormatter.error(
+        'Validation failed',
+        400,
+        error.errors?.map((e) => ({ path: e.path, message: e.message })) ?? null
+      )
+    )
 }
 if (error instanceof ConnectionError || error instanceof DatabaseError) {
-  return res.status(503).json(ResponseFormatter.error('Database unavailable', 503))
+  return res
+    .status(503)
+    .json(ResponseFormatter.error('Database unavailable', 503))
 }
 ```
 
@@ -405,10 +470,16 @@ import { authController } from './auth.controller.js'
 
 export const authRouter = Router()
 
-authRouter.post('/register', validateBody(RegisterSchema),
-  asyncHandler(authController.register))
-authRouter.post('/login', validateBody(LoginSchema),
-  asyncHandler(authController.login))
+authRouter.post(
+  '/register',
+  validateBody(RegisterSchema),
+  asyncHandler(authController.register)
+)
+authRouter.post(
+  '/login',
+  validateBody(LoginSchema),
+  asyncHandler(authController.login)
+)
 ```
 
 `auth.schemas.ts` defines `RegisterSchema` and `LoginSchema` (Zod) with `email` (string, email) and `password` (string, min 8).
@@ -429,11 +500,13 @@ import { usersController } from './users.controller.js'
 
 export const usersRouter = Router()
 
-usersRouter.get('/',
+usersRouter.get(
+  '/',
   authenticate,
   authorize(Object.values(APPLICATION_ROLES)),
   validateQuery(QuerySchema),
-  asyncHandler(usersController.list))
+  asyncHandler(usersController.list)
+)
 ```
 
 `users.service.ts` `list({ page, limit, search })` calls `usersRepo.findAll({ offset: (page-1)*limit, limit, search })` and returns `{ rows, count, page, limit }`. `usersController.list` wraps in `ResponseFormatter.paginated(rows, page, limit, count)`.
@@ -459,9 +532,15 @@ import { User } from './user.model.js'
 describe('usersRepo', () => {
   beforeAll(async () => {
     await sequelize.sync({ force: true })
-    await User.create({ email: 'a@example.com', passwordHash: 'x', roleId: 'USER' })
+    await User.create({
+      email: 'a@example.com',
+      passwordHash: 'x',
+      roleId: 'USER'
+    })
   })
-  afterAll(async () => { await sequelize.close() })
+  afterAll(async () => {
+    await sequelize.close()
+  })
 
   it('findAll returns seeded users', async () => {
     const { rows, count } = await usersRepo.findAll({ limit: 10, offset: 0 })
@@ -489,7 +568,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@shared': path.resolve(__dirname, 'src/shared'),
-      '@infra':  path.resolve(__dirname, 'src/infra')
+      '@infra': path.resolve(__dirname, 'src/infra')
     }
   }
 })
@@ -527,10 +606,10 @@ The aliases mirror `tsconfig.json` so the test file can import via `@infra/db/se
 ```jsonc
 {
   // ... existing
-  "db:migrate":     "tsx src/infra/db/run-migrations.ts",
+  "db:migrate": "tsx src/infra/db/run-migrations.ts",
   "db:migrate:down": "tsx src/infra/db/run-migrations-down.ts",
-  "test":           "vitest run",
-  "test:watch":     "vitest"
+  "test": "vitest run",
+  "test:watch": "vitest"
 }
 ```
 
