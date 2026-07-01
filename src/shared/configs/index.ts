@@ -24,7 +24,14 @@ const config = {
   port: Number(process.env.PORT ?? 5000),
 
   postgres: {
-    database_url: required('DATABASE_URL')
+    database_url: required('DATABASE_URL'),
+    pool: {
+      max: Number(process.env.POSTGRES_POOL_MAX ?? 10),
+      min: Number(process.env.POSTGRES_POOL_MIN ?? 0),
+      acquire: Number(process.env.POSTGRES_POOL_ACQUIRE ?? 30000),
+      idle: Number(process.env.POSTGRES_POOL_IDLE ?? 10000)
+    },
+    ssl: process.env.POSTGRES_SSL === 'true'
   },
 
   //   rabbitmq: {
