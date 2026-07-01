@@ -27,7 +27,7 @@
     "paths": {
       "@shared/*": ["./src/shared/*"],
       "#prismagenerated/*": ["./src/shared/generated/*"],
-      "@infra/*": ["./src/infrastructure/*"]
+      "@infra/*": ["./src/infra/*"]
     },
 
     // Recommended Options
