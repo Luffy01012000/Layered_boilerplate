@@ -20,6 +20,7 @@ import config from '@shared/configs/index.js'
  *   Routes
  * ====================================
  */
+import { usersRouter } from './services/users/users.routes.js'
 
 export const createServer = () => {
   const app = express()
@@ -58,6 +59,8 @@ export const createServer = () => {
       commit: 'git-sha'
     })
   })
+
+  app.use('/api/users', usersRouter)
 
   app.use(errorHandler)
 
