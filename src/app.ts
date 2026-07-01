@@ -6,12 +6,6 @@ import compression from 'compression'
 // import rateLimit from 'express-rate-limit';
 import hpp from 'hpp'
 import helmet from 'helmet'
-
-/**
- * =====================================
- *   Middlwares
- * ====================================
- */
 import { errorHandler } from '@shared/middlewares/errorHandler.js'
 import config from '@shared/configs/index.js'
 
@@ -20,6 +14,7 @@ import config from '@shared/configs/index.js'
  *   Routes
  * ====================================
  */
+import { authRouter } from './services/auth/auth.routes.js'
 import { usersRouter } from './services/users/users.routes.js'
 
 export const createServer = () => {
@@ -61,6 +56,7 @@ export const createServer = () => {
   })
 
   app.use('/api/users', usersRouter)
+  app.use('/api/auth', authRouter)
 
   app.use(errorHandler)
 
